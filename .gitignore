@@ -1,0 +1,22 @@
+# Android / Gradle
+.gradle/
+.idea/
+*.iml
+build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+# Firebase — never commit your real google-services.json
+# (the placeholder in this repo is safe; replace it with your real file locally)
+# app/google-services.json   <-- uncomment this line after adding your real file
+
+# Kotlin / Java
+*.class
+*.jar
+
+# macOS
+.DS_Store

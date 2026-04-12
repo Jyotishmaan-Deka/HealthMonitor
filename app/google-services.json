@@ -1,0 +1,40 @@
+{
+  "__SETUP_INSTRUCTIONS__": [
+    "1. Go to https://console.firebase.google.com",
+    "2. Create (or select) a project",
+    "3. Click 'Add app' → Android",
+    "4. Enter package name: com.healthmonitor",
+    "5. Download the real google-services.json",
+    "6. Replace this entire file with the downloaded file",
+    "7. In Firebase Console: enable Email/Password auth",
+    "8. In Firebase Console: create a Firestore database (start in test mode)",
+    "9. In Firebase Console: enable Cloud Messaging"
+  ],
+  "project_info": {
+    "project_number": "REPLACE_WITH_YOUR_PROJECT_NUMBER",
+    "project_id": "REPLACE_WITH_YOUR_PROJECT_ID",
+    "storage_bucket": "REPLACE_WITH_YOUR_PROJECT_ID.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "REPLACE_WITH_YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.healthmonitor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "REPLACE_WITH_YOUR_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
