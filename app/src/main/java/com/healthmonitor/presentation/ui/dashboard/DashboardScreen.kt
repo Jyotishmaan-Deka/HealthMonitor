@@ -7,6 +7,8 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -208,30 +210,30 @@ private fun DeviceStatusChip(connected: Boolean, address: String, onClick: () ->
         if (connected) Color(0xFF43A047).copy(alpha = 0.15f) else Color.Gray.copy(alpha = 0.15f),
         label = "chip_color"
     )
-    androidx.compose.foundation.clickable(
-        indication = null,
-        interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-    ) { onClick() }.let { mod ->
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(bgColor)
-                .then(Modifier.padding(horizontal = 12.dp, vertical = 6.dp)),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Icon(
-                imageVector = if (connected) Icons.Default.Bluetooth else Icons.Default.BluetoothDisabled,
-                contentDescription = null,
-                tint = if (connected) Color(0xFF43A047) else Color.Gray,
-                modifier = Modifier.size(16.dp)
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(bgColor)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick
             )
-            Text(
-                text = if (connected) address.take(9) else "Tap to scan",
-                style = MaterialTheme.typography.labelMedium,
-                color = if (connected) Color(0xFF2E7D32) else Color.Gray
-            )
-        }
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Icon(
+            imageVector = if (connected) Icons.Default.Bluetooth else Icons.Default.BluetoothDisabled,
+            contentDescription = null,
+            tint = if (connected) Color(0xFF43A047) else Color.Gray,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(
+            text = if (connected) address.take(9) else "Tap to scan",
+            style = MaterialTheme.typography.labelMedium,
+            color = if (connected) Color(0xFF2E7D32) else Color.Gray
+        )
     }
 }
 

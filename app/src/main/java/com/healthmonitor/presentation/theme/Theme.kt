@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Typography
 
-// ── Brand colors ──────────────────────────────────────────────────────────────
+// ── Colors ──────────────────────────────────────────────────────────────
 val HeartRed      = Color(0xFFE53935)
 val OxygenBlue    = Color(0xFF1E88E5)
 val StepsGreen    = Color(0xFF43A047)
