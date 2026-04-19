@@ -7,9 +7,33 @@
             android:height="108dp"
             android:viewportWidth="108"
             android:viewportHeight="108">
+
+            <!-- Heart shape, white fill -->
             <path
                 android:fillColor="#FFFFFF"
-                android:pathData="M31,63.92V44.08c0,-2.3 1.87,-4.17 4.17,-4.17H44.08V31c0,-2.3 1.87,-4.17 4.17,-4.17h11.5c2.3,0 4.17,1.87 4.17,4.17V39.91h8.92c2.3,0 4.17,1.87 4.17,4.17v11.5c0,2.3 -1.87,4.17 -4.17,4.17h-8.92v8.92c0,2.3 -1.87,4.17 -4.17,4.17h-11.5c-2.3,0 -4.17,-1.87 -4.17,-4.17V59.75H35.17c-2.3,0 -4.17,-1.87 -4.17,-4.17V54.08z" />
+                android:pathData="
+                    M54,76
+                    C38,63 18,52 18,36
+                    A18,18 0,0,1 54,32
+                    A18,18 0,0,1 90,36
+                    C90,52 70,63 54,76
+                    Z"/>
+
+            <!-- EKG / pulse line through the heart, cyan stroke -->
+            <path
+                android:fillColor="@android:color/transparent"
+                android:strokeColor="#97F0FF"
+                android:strokeWidth="3.2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:pathData="
+                    M26,53
+                    L40,53
+                    L45,39
+                    L50,67
+                    L55,53
+                    L82,53"/>
+
         </vector>
     </foreground>
 </adaptive-icon>

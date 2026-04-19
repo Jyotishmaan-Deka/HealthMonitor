@@ -1,5 +1,6 @@
 package com.healthmonitor.data.ble
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
@@ -12,8 +13,10 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
@@ -65,6 +68,19 @@ class BleManager @Inject constructor(
         return btManager.adapter?.isEnabled == true
     }
 
+    private fun hasPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun arePermissionsGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            hasPermission(Manifest.permission.BLUETOOTH_SCAN) &&
+                    hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        } else {
+            hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
     /**
      * Produces a continuous stream of health readings.
      * In MOCK mode it generates realistic simulated data.
@@ -107,6 +123,11 @@ class BleManager @Inject constructor(
 
     @SuppressLint("MissingPermission")
     private fun realBleFlow(): Flow<BleHealthData> = callbackFlow {
+        if (!arePermissionsGranted()) {
+            close(SecurityException("Missing Bluetooth permissions"))
+            return@callbackFlow
+        }
+
         val btManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val scanner = btManager.adapter?.bluetoothLeScanner
 
@@ -194,10 +215,19 @@ class BleManager @Inject constructor(
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
 
-        scanner.startScan(filters, settings, scanCallback)
+        try {
+            scanner.startScan(filters, settings, scanCallback)
+        } catch (e: SecurityException) {
+            close(e)
+            return@callbackFlow
+        }
 
         awaitClose {
-            scanner.stopScan(scanCallback)
+            try {
+                scanner.stopScan(scanCallback)
+            } catch (e: SecurityException) {
+                // Ignore during close
+            }
             bluetoothGatt?.disconnect()
             bluetoothGatt?.close()
             bluetoothGatt = null

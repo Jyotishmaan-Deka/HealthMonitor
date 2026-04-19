@@ -42,4 +42,8 @@ class ProfileViewModel @Inject constructor(
     fun setOxygenAlertLow(value: Float) {
         viewModelScope.launch { prefsRepo.setOxygenAlertLow(value) }
     }
+
+    fun setUseDarkTheme(dark: Boolean) {
+        viewModelScope.launch { prefsRepo.setUseDarkTheme(dark) }
+    }
 }

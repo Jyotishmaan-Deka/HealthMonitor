@@ -23,7 +23,8 @@ data class UserPreferences(
     val heartRateAlertHigh: Int = 120,
     val heartRateAlertLow: Int = 50,
     val oxygenAlertLow: Float = 95f,
-    val fcmToken: String = ""
+    val fcmToken: String = "",
+    val useDarkTheme: Boolean = false
 )
 
 @Singleton
@@ -32,7 +33,6 @@ class UserPreferencesRepository @Inject constructor(
 ) {
     private val dataStore = context.dataStore
 
-    // ── Keys ─────────────────────────────────────────────────────────────────
     private object Keys {
         val NOTIFICATIONS_ENABLED   = booleanPreferencesKey("notifications_enabled")
         val AUTO_SYNC_ENABLED       = booleanPreferencesKey("auto_sync_enabled")
@@ -41,9 +41,9 @@ class UserPreferencesRepository @Inject constructor(
         val HR_ALERT_LOW            = intPreferencesKey("hr_alert_low")
         val OXYGEN_ALERT_LOW        = stringPreferencesKey("oxygen_alert_low")
         val FCM_TOKEN               = stringPreferencesKey("fcm_token")
+        val USE_DARK_THEME          = booleanPreferencesKey("use_dark_theme")
     }
 
-    // ── Observe ───────────────────────────────────────────────────────────────
     val userPreferences: Flow<UserPreferences> = dataStore.data.map { prefs ->
         UserPreferences(
             notificationsEnabled = prefs[Keys.NOTIFICATIONS_ENABLED] ?: true,
@@ -52,11 +52,11 @@ class UserPreferencesRepository @Inject constructor(
             heartRateAlertHigh   = prefs[Keys.HR_ALERT_HIGH]          ?: 120,
             heartRateAlertLow    = prefs[Keys.HR_ALERT_LOW]           ?: 50,
             oxygenAlertLow       = prefs[Keys.OXYGEN_ALERT_LOW]?.toFloatOrNull() ?: 95f,
-            fcmToken             = prefs[Keys.FCM_TOKEN]              ?: ""
+            fcmToken             = prefs[Keys.FCM_TOKEN]              ?: "",
+            useDarkTheme         = prefs[Keys.USE_DARK_THEME]         ?: false
         )
     }
 
-    // ── Update ────────────────────────────────────────────────────────────────
     suspend fun setNotificationsEnabled(enabled: Boolean) {
         dataStore.edit { it[Keys.NOTIFICATIONS_ENABLED] = enabled }
     }
@@ -83,5 +83,9 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun setFcmToken(token: String) {
         dataStore.edit { it[Keys.FCM_TOKEN] = token }
+    }
+
+    suspend fun setUseDarkTheme(dark: Boolean) {
+        dataStore.edit { it[Keys.USE_DARK_THEME] = dark }
     }
 }

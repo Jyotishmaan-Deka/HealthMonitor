@@ -31,7 +31,6 @@ class AuthViewModel @Inject constructor(
     private val _state = MutableStateFlow(AuthUiState())
     val state: StateFlow<AuthUiState> = _state.asStateFlow()
 
-    // Reactive: updates whenever Firebase Auth state changes (login/logout)
     val isLoggedIn: StateFlow<Boolean> = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser != null)
@@ -85,12 +84,19 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun friendlyError(raw: String?): String = when {
-        raw == null                               -> "An unexpected error occurred"
-        "no user record" in raw.lowercase()       -> "No account found with that email"
-        "password is invalid" in raw.lowercase()  -> "Incorrect password"
-        "email address is badly" in raw.lowercase()-> "Please enter a valid email"
-        "already in use" in raw.lowercase()       -> "An account already exists for this email"
-        "network error" in raw.lowercase()        -> "No internet connection"
-        else                                      -> raw
+        raw == null                                        -> "An unexpected error occurred"
+        "api key" in raw.lowercase() ||
+        "api_key" in raw.lowercase() ||
+        "key not valid" in raw.lowercase()                ->
+            "⚙️ Firebase not configured — add your google-services.json file from the Firebase Console, " +
+            "or tap \"Continue as Guest\" to explore with demo data."
+        "no user record" in raw.lowercase()               -> "No account found with that email"
+        "password is invalid" in raw.lowercase()          -> "Incorrect password"
+        "email address is badly" in raw.lowercase()       -> "Please enter a valid email"
+        "already in use" in raw.lowercase()               -> "An account already exists for this email"
+        "network error" in raw.lowercase()                -> "No internet connection — check your network and try again"
+        "too many requests" in raw.lowercase()            -> "Too many attempts. Please wait a moment and try again"
+        "user disabled" in raw.lowercase()                -> "This account has been disabled"
+        else                                              -> raw
     }
 }
